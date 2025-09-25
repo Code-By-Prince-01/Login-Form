@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Form</title>
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+            font-size: 16px;
+            font-family: "Poppins-Medium";
+            font-weight: bold;
+        }
+
+        body {
+            background-color: olivedrab;
+        }
+
+        .login-Container {
+            height: 350px;
+            width: 300px;
+            background-color: white;
+            margin: 120px auto;
+            border-radius: 40px 20px 40px 20px;
+            position: relative;
+        }
+
+        .header-h2 {
+            font-size: 30px;
+            letter-spacing: 2px;
+            color: #008083;
+            font-family: "Poppins";
+            font-weight: bolder;
+            position: relative;
+            top: 20px;
+            text-align: center;
+        }
+
+        /* Input field wrapper */
+        .login-Field1,
+        .login-Field2 {
+            position: relative;
+            margin: 10px 0px 0px 40px;
+        }
+
+        /* First field ke liye top margin */
+        .login-Field1 {
+            margin-top: 50px;
+        }
+
+        /* Second field ke liye extra gap */
+        .login-Field2 {
+            margin-top: 30px;
+        }
+
+        /* Input fields */
+        .email-Input,
+        .pass-Input {
+            height: 28px;
+            width: 210px;
+            border: none;
+            border-bottom: 2px solid black;
+            outline: none;
+            color: black;
+            background: transparent;
+            padding: 5px 0;
+        }
+
+        /* Labels */
+        .input-Label1,
+        .input-Label2 {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            color: olivedrab;
+            font-family: "poppins",sans-serif;
+            font-size: 12px;
+            opacity: 0.5;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+
+        /* Email label animation */
+        .email-Input:focus + .input-Label1,
+        .email-Input:not(:placeholder-shown) + .input-Label1 {
+            top: -6px;
+            font-size: 12px;
+            color: teal;
+            opacity: 1;
+        }
+
+        /* Password label animation */
+        .pass-Input:focus + .input-Label2,
+        .pass-Input:not(:placeholder-shown) + .input-Label2 {
+            top: -6px;
+            font-size: 12px;
+            color: teal;
+            opacity: 1;
+        }
+
+        /* Helper text styling */
+        .helper-text {
+            color: #666;
+            font-size: 10px;
+            margin-top: 3px;
+            margin-left: 5px;
+            font-weight: normal;
+        }
+
+        /* Error message styling */
+        .error-message {
+            color: red;
+            font-size: 10px;
+            margin-top: 3px;
+            margin-left: 5px;
+            display: none;
+            font-weight: normal;
+        }
+
+        .button-Field {
+            text-align: center;
+            margin-top: 25px;
+            margin-left: 50px;
+        }
+
+        .btn {
+            height: 38px;
+            width: 90px;
+            padding: 6px;
+            color: white;
+            border: none;
+            outline: none;
+            background-color: olivedrab;
+            border-radius: 6px;
+            margin: 7px 0px 0px -50px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            color: teal;
+            background: whitesmoke;
+            transform: translateY(-2px);
+            box-shadow: 4px 4px 5px teal;
+        }
+
+        .btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn:disabled:hover {
+            background-color: #ccc;
+            color: white;
+        }
+
+        /* Invalid input styling */
+        .pass-Input.invalid {
+            border-bottom: 2px solid red;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-Container">
+        <h2 class="header-h2">Login Form</h2>
+        <div class="login-Field1">
+            <input type="email" class="email-Input" placeholder=" " required>
+            <label class="input-Label1">Enter Your Email</label>
+        </div>
+        <div class="login-Field2">
+            <input type="password" class="pass-Input" placeholder=" " maxlength="8" required>
+            <label class="input-Label2">Enter Your Password</label>
+            <div class="helper-text">Password must be 4 to 8 digits only</div>
+            <div class="error-message" id="password-error">Invalid password format</div>
+        </div>
+        <div class="button-Field">
+            <input type="button" value="Login" class="btn" id="login-btn" onclick="validateAndSubmit()">
+        </div>
+    </div>
+
+    <script>
+        const passwordInput = document.querySelector('.pass-Input');
+        const errorMessage = document.getElementById('password-error');
+        const loginBtn = document.getElementById('login-btn');
+
+        // Password input par real-time validation
+        passwordInput.addEventListener('input', function() {
+            const value = this.value;
+            
+            // Sirf numbers allow karne ke liye
+            this.value = value.replace(/[^0-9]/g, '');
+            
+            validatePassword();
+        });
+
+        function validatePassword() {
+            const password = passwordInput.value;
+            
+            if (password.length === 0) {
+                // Empty field - hide error
+                errorMessage.style.display = 'none';
+                passwordInput.classList.remove('invalid');
+                loginBtn.disabled = false;
+            } else if (password.length < 4 || password.length > 8) {
+                // Invalid length - show error
+                errorMessage.style.display = 'block';
+                passwordInput.classList.add('invalid');
+                loginBtn.disabled = true;
+            } else {
+                // Valid password - hide error
+                errorMessage.style.display = 'none';
+                passwordInput.classList.remove('invalid');
+                loginBtn.disabled = false;
+            }
+        }
+
+        function validateAndSubmit() {
+            const email = document.querySelector('.email-Input').value;
+            const password = passwordInput.value;
+            
+            if (!email) {
+                alert('Please enter your email');
+                return;
+            }
+            
+            if (password.length < 4 || password.length > 8) {
+                alert('Password must be 4-8 digits only');
+                return;
+            }
+            
+            // Validation pass - redirect kar sakte hain
+            alert('Login successful!');
+            // window.location.href = './form.html'; // Uncomment for redirect
+        }
+    </script>
+</body>
+
+</html>
